@@ -36,26 +36,22 @@ const uploadPhoto=async (req,res,next)=>{
             })
         }
 
-        // Validate that an album was selected
-        const albumId=parseInt(req.body.albumId)
-        if(!albumId||isNaN(albumId)){
-            const albums=await db.getUserAlbums(parseInt(req.user.id))
-            return res.render("photos/upload",{
-                title:"Upload Photo",
-                albums,
-                selectedAlbumId:"",
-                error:"Please select an album."
-            })
-        }
+        // albumId is now optional
+        // if user did not select an album, it is null
+        const albumId=req.body.albumId?parseInt(req.body.albumId):null
+        
+        // Only verify album ownership if an album was selected
 
-        // Verify the album belongs to this user
-        const album=await db.getAlbumById(albumId)
-        if(!album || album.userId!==parseInt(req.user.id)){
-            return res.status(403).render("error",{
-                title:"Forbidden",
-                message:"That is not your album"
-            })
+        if(albumId){
+            const album=await db.getAlbumById(albumId)
+            if(!album || album.userId!==parseInt(req.user.id)){
+                return res.status(403).render("error",{
+                    title:"Forbidden",
+                    message:"That is not your album"
+                })
+            }
         }
+        
 
         // CLOUDINARY UPLOAD
         // req.file.buffer = the file data from multer memory storage
@@ -64,7 +60,7 @@ const uploadPhoto=async (req,res,next)=>{
 
         const result=await uploadToCloudinary(
             req.file.buffer,
-            "photo-album"   //Cloudinary folder name for this project
+            "photo-album-pro"   //Cloudinary folder name for this project
         )
 
         // result.secure_url = "https://res.cloudinary.com/your-cloud/image/upload/..."
@@ -80,8 +76,14 @@ const uploadPhoto=async (req,res,next)=>{
             userId:parseInt(req.user.id)
         })
 
-        // Go back to the album
-        res.redirect(`/albums/${albumId}`)
+        //Redirect to album if one was selected, otherwise to home
+        if(albumId){
+            res.redirect(`/albums/${albumId}`)
+        }
+        else{
+            res.redirect("/")
+        }
+        
     }catch(err){
         next(err)
     }

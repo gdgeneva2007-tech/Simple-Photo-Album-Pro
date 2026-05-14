@@ -1,18 +1,37 @@
 const db=require("../db/queries")
 
-const getNewAlbumForm=(req,res)=>{
-    res.render("albums/form",{
-        title:"Create Album",
-        formAction:"/albums/new",
-        formData:{},
-        errors:[]
-    })
+const getNewAlbumForm=async (req,res,next)=>{
+    try{
+        // Check if creating inside a parent album
+        const parentId=req.query.parentId?parseInt(req.query.parentId):null;
+        let parentAlbumName=null;
+        if(parentId){
+            const parent=await db.getAlbumById(parentId)
+            if(parent&&parent.userId===parseInt(req.user.id)){
+                parentAlbumName=parent.name
+            }
+        }
+
+        res.render("albums/form",{
+            title:"Create Album",
+            formAction:"/albums/new",
+            formData:{},
+            errors:[],
+            parentId,
+            parentAlbumName
+        })
+    }catch(err){
+        next(err)
+    }
 }
 
+// When creating an album, accept optional parentId
 const postNewAlbum=async (req,res,next)=>{
     try{
         const name=req.body.name?req.body.name.trim():""
 
+        //parentId comes from a hidden input or query param
+        const parentId=req.body.parentId?parseInt(req.body.parentId):null
         if(!name){
             return res.render("albums/form",{
                 title:"Create Album",
@@ -22,8 +41,25 @@ const postNewAlbum=async (req,res,next)=>{
             })
         }
 
-        await db.createAlbum(name,parseInt(req.user.id))
-        res.redirect("/")
+        // if parentId provided, verify it belongs to this user
+        if(parentId){
+            const parentAlbum=await db.getAlbumById(parentId)
+            if(!parentAlbum||parentAlbum.userId!==parseInt(req.user.id)){
+                return res.status(403).render("error",{
+                    title:"Forbidden",message:"That is not your album"
+                })
+            }
+
+        }
+
+        const album=await db.createAlbum(name,parseInt(req.user.id),parentId)
+        //Redirecting to parent if created inside one
+        if(parentId){
+            res.redirect(`/albums/${parentId}`)
+        }else{
+            res.redirect("/")
+        }
+        
     }catch(err){
         next(err)
     }

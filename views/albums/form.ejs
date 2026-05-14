@@ -15,6 +15,17 @@
         value="<%= formData.name||"" %>"
         placeholder=e.g. Summer 2024>
     </div>
+
+    <!-- 
+        Hidden input carries the parentId if creating a sub-album
+        When user clicks "+ Create Sub-Album" from an album page,
+        the URL is /albums/new?parentId=1
+        We read that and put it in a hidden field so it submits with the form
+    -->
+    <% if(parentId) {%>
+        <input type="hidden" name="parentId" value="<%= parentId %>">
+        <p>Creating inside: <%= parentAlbumName %></p>
+    <% } %>
     <button type="submit"><%= title %></button>
     <a href="/">Cancel</a>
 </form>

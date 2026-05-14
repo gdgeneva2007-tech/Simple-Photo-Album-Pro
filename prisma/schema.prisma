@@ -22,6 +22,15 @@ model Album {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   photos    Photo[]
+
+  // Self-referencing relation for nesting
+  parentId Int? //null=root album
+  parent   Album?  @relation("AlbumChildren", fields: [parentId], references: [id])
+  children Album[] @relation("AlbumChildren") //sub-albums
+
+  // Share link fields
+  shareId     String?   @unique // the UUID in the URL
+  shareExpiry DateTime? // when the link expires
 }
 
 model Photo {
@@ -31,8 +40,9 @@ model Photo {
   url          String
   cloudinaryId String
   uploadedAt   DateTime @default(now())
-  albumId      Int
-  album        Album    @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  // albumId is now optional
+  albumId      Int?
+  album        Album?   @relation(fields: [albumId], references: [id], onDelete: SetNull)
   userId       Int
 }
 

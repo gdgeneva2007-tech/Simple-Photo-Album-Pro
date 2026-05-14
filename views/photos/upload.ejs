@@ -15,7 +15,8 @@
     <div>
         <label for="albumId">Album</label>
         <select name="albumId" id="albumId">
-            <option value="" >-- Select Album --</option>
+            <!-- Empty option means no album -->
+            <option value="" >-- No Album (Uncategorized) --</option>
             <% for( let i = 0; i < albums.length; i++ ) { %>
                 <option value="<%= albums[i].id %>"
                 <%= selectedAlbumId==albums[i].id?'selected':"" %>><%= albums[i].name %></option>

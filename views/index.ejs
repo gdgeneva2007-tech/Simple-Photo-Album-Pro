@@ -1,6 +1,10 @@
 <%- include('./partials/header') %>
 <h1 class="text-3xl font-bold">My Photo Albums</h1>
 <a href="/albums/new">+ Create Album</a>
+<a href="/photos/upload">+ Upload Photo</a>
+
+<!-- Albums section -->
+ <h2>Albums</h2>
 <% if(albums.length===0){ %>
     <p>No albums yet. Create your first album!</p>
 <% }else{ %>
@@ -13,5 +17,16 @@
             <p>Created: <%= new Date(album.createdAt).toLocaleDateString() %></p>
         </div>
     <% }) %>
+<% } %>
+
+<!-- Unorganized photos section -->
+<% if(unorganizedPhotos.length>0) {%>
+    <h2>Uncategorized Photos</h2>
+    <% for( let i = 0; i < unorganizedPhotos.length; i++ ) { %>
+        <div>
+            <img src="<%= unorganizedPhotos[i].url %>" style="width:150px;height:150px;object-fit:cover;">
+            <a href="/photos/<%= unorganizedPhotos[i].id %>">Details</a>
+        </div>
+    <% } %>
 <% } %>
 <%- include('./partials/footer') %>

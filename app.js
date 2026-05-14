@@ -18,6 +18,7 @@ const authRouter = require("./routes/auth");
 // ──────────────────────────────────────────────────────
 const albumsRouter=require("./routes/albums")
 const photosRouter=require("./routes/photos")
+const shareRouter=require("./routes/share")
 
 
 const app = express();
@@ -58,7 +59,7 @@ app.use("/auth", authRouter);
 // ──────────────────────────────────────────────────────
 app.use("/albums",albumsRouter)
 app.use("/photos",photosRouter)
-
+app.use("/share",shareRouter)
 
 // 404
 app.use((req, res) => {

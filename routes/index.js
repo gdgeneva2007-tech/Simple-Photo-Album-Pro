@@ -10,7 +10,8 @@ const db=require("../db/queries")
 router.get("/",ensureLoggedIn,async (req ,res,next)=>{
   try{
     const albums=await db.getUserAlbums(parseInt(req.user.id))
-    res.render("index",{title:"My Photo Albums",albums})
+    const unorganizedPhotos=await db.getUnorganizedPhotos(parseInt(req.user.id))
+    res.render("index",{title:"My Photo Albums",albums,unorganizedPhotos})
   }catch(err){
     next(err)
   }

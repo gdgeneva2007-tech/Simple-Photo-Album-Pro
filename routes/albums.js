@@ -2,6 +2,7 @@ const express=require("express")
 const router=express.Router();
 const {ensureLoggedIn}=require("../middleware/auth")
 const albumController=require("../controllers/albumController")
+const {createShareLink,removeShareLink}=require("../controllers/shareController")
 
 // Show create album form
 router.get("/new",ensureLoggedIn,albumController.getNewAlbumForm)
@@ -20,5 +21,9 @@ router.post("/:id/edit",ensureLoggedIn,albumController.postEditAlbum)
 
 // Delete album
 router.post("/:id/delete",ensureLoggedIn,albumController.deleteAlbum)
+
+// Share routes
+router.post("/:id/share",ensureLoggedIn,createShareLink)
+router.post("/:id/unshare",ensureLoggedIn,removeShareLink)
 
 module.exports=router

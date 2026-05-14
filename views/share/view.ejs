@@ -1,0 +1,14 @@
+<%- include("../partials/header") %>
+<h1><%= album.name %></h1>
+<p>Shared by <%= album.user.firstName %> <%= album.user.lastName %></p>
+<% if(album.photos.length===0){ %>
+    <p>No photos in this album</p>
+<% }else{ %>
+    <% album.photos.forEach(function (photo){ %>
+        <div>
+            <img src="<%= photo.url %>" style="width:200px;height:200px;object-fit:cover">
+            <p><%= photo.name %></p>
+        </div>
+    <% }) %>
+<% } %>
+<%- include("../partials/footer") %>
