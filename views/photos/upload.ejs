@@ -1,0 +1,42 @@
+<%- include("../partials/header") %>
+<h1>Upload Photo</h1>
+<a href="/">Back</a>
+
+<% if(error){ %>
+    <p style="color:red;"><%= error %></p>
+<% } %>
+
+<!-- 
+    CRITICAL: enctype="multipart/form-data"
+    Without this the file never reaches the server
+    Regular forms use urlencoded, file forms use multipart
+-->
+<form action="/photos/upload" method="POST" enctype="multipart/form-data">
+    <div>
+        <label for="albumId">Album</label>
+        <select name="albumId" id="albumId">
+            <option value="" >-- Select Album --</option>
+            <% for( let i = 0; i < albums.length; i++ ) { %>
+                <option value="<%= albums[i].id %>"
+                <%= selectedAlbumId==albums[i].id?'selected':"" %>><%= albums[i].name %></option>
+            <% } %>
+        </select>
+    </div>
+
+    <div>
+        <label for="photo">Choose Photo</label>
+        <!-- 
+            name="photo" must match upload.single("photo") in the route
+            type="file" shows the file picker
+            accept="image/*" filters to images in the file picker
+            (user can still bypass this, that's why we validate server-side too)
+        -->
+        <input type="file"
+        id="photo" 
+        name="photo"
+        accept="image/*">
+        <small>Max 5MB. Allowed types: JPEG, PNG, GIF, WEBP</small>
+    </div>
+    <button type="submit">Upload</button>
+</form>
+<%- include("../partials/footer") %>

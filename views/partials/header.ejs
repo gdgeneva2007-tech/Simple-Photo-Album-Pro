@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | App Name</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <nav class="bg-white border-b border-gray-200 px-6 py-4">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
+      <a href="/" class="text-xl font-bold text-indigo-600">App Name</a>
+      <div class="flex items-center gap-4">
+        <% if (user) { %>
+          <span class="text-sm text-gray-600">Hello, <%= user.first_name %></span>
+          <form action="/auth/logout" method="POST">
+            <button type="submit" class="text-sm text-gray-500 hover:text-gray-700">
+              Log Out
+            </button>
+          </form>
+        <% } else { %>
+          <a href="/auth/login" class="text-sm text-gray-600">Log In</a>
+          <a href="/auth/signup" class="text-sm bg-indigo-600 text-white px-4 py-1.5 rounded-lg hover:bg-indigo-700">
+            Sign Up
+          </a>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+  <main class="flex-1 max-w-4xl mx-auto w-full px-4 py-8">

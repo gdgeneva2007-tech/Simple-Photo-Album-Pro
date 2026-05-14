@@ -1,0 +1,17 @@
+<%- include('./partials/header') %>
+<h1 class="text-3xl font-bold">My Photo Albums</h1>
+<a href="/albums/new">+ Create Album</a>
+<% if(albums.length===0){ %>
+    <p>No albums yet. Create your first album!</p>
+<% }else{ %>
+    <% albums.forEach(function (album){ %>
+        <div>
+            <a href="/albums/<%= album.id %>">
+                <h3><%= album.name %></h3>
+            </a>
+            <p><%= album._count.photos %> photo<%= album._count.photos!==1?'s':'' %></p>
+            <p>Created: <%= new Date(album.createdAt).toLocaleDateString() %></p>
+        </div>
+    <% }) %>
+<% } %>
+<%- include('./partials/footer') %>

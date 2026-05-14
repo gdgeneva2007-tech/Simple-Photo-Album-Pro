@@ -1,0 +1,21 @@
+<%- include('../partials/header') %>
+<h1><%= title %></h1>
+<% if(errors.length>0){ %>
+    <ul>
+        <% for( let i = 0; i < errors.length; i++ ) { %>
+            <li style="color: red;"><%= errors[i].msg %></li>
+        <% } %>
+    </ul>
+<% } %>
+
+<form action="<%= formAction %>" method="POST">
+    <div>
+        <label for="name">Album Name</label>
+        <input type="text" id="name"  name="name"
+        value="<%= formData.name||"" %>"
+        placeholder=e.g. Summer 2024>
+    </div>
+    <button type="submit"><%= title %></button>
+    <a href="/">Cancel</a>
+</form>
+<%- include("../partials/footer") %>

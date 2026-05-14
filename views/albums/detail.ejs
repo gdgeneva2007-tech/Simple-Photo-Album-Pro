@@ -1,0 +1,26 @@
+<%- include('../partials/header') %>
+<a href="/">Back to Albums</a>
+<h1><%= album.name %></h1>
+<a href="/photos/upload?albumId=<%= album.id %>">+ Upload Photo</a>
+<a href="/albums/<%= album.id %>/edit">Rename</a>
+
+<form action="/albums/<%= album.id %>/delete" method="POST" style="display:inline">
+    <button type="submit" onclick="return confirm('Delete this album and all its photos?')">Delete Album</button>
+</form>
+
+<% if(album.photos.length===0){ %>
+    <p>No photos yet. Upload your first photo!</p>
+<% }else{ %>
+    <% album.photos.forEach(function (photo){ %>
+        <div>
+            <!-- Show th actual image using the Cloudinary URL -->
+             <img src="<%= photo.url %>" alt="<%= photo.name %>"
+              style="width:200px;height:200px;object-fit: cover;">
+            <p><%= photo.name %></p>
+            <a href="/photos/<%= photo.id %>">Details</a>
+        </div>
+        
+    <% }) %>
+<% } %>
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,28 @@
+<%- include("../partials/header") %>
+<a href="/albums/<%= photo.album.id %>">Back to <%= photo.album.name %></a>
+<h1><%= photo.name %></h1>
+
+<img src="<%= photo.url %>" alt="<%= photo.name %>" style="max-width: 500px;">
+
+<ul>
+    <li>Size: <%= formattedSize %></li>
+    <li>Album: <%= photo.album.name %></li>
+    <li>Uploaded: <%= new Date(photo.uploadedAt).toLocaleDateString('en-US',{
+        year:'numeric',month:"long",day:"numeric"
+    }) %></li>
+</ul>
+
+<!-- 
+    Download button:
+    The "download" attribute on an anchor tag tells the browser
+    to download the file instead of opening it
+    We set the filename to the original photo name
+-->
+<a href="<%= downloadUrl %>" download="<%= photo.name %>">Download Photo</a>
+
+<form action="/photos/<%= photo.id %>/delete" method="POST">
+    <button
+    type="submit"
+    onclick="return confirm('Delete this photo permanently?')">Delete Photo</button>
+</form>
+<%- include("../partials/footer") %>
